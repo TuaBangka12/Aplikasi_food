@@ -37,7 +37,9 @@ $routes->set404Override();
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->resource('user');
+$routes->resource('makanan');
 $routes->post('login', 'User::login');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
