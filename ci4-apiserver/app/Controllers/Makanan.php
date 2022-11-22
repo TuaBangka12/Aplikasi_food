@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
-
+use App\Models\Modelmakanan;
 class Makanan extends ResourceController
 {
     /**
@@ -32,7 +32,7 @@ class Makanan extends ResourceController
      */
     public function show($cari = null)
     {
-        $modelMakanan = new Modeluser();
+        $modelMakanan = new Modelmakanan();
         $data = $modelMakanan->orLike('id', $cari) ->orLike('makanan', $cari)->get()->getResult();
         if(count($data) > 1) {
                 $response = [
@@ -74,7 +74,7 @@ class Makanan extends ResourceController
      */
     public function create()
     {
-        $modelMakanan = new ModelMakanan();
+        $modelMakanan = new Modelmakanan();
         $id = $this->request->getPost("id");
         $nama_makanan = $this->request->getPost("nama_makanan");
         $harga = $this->request->getPost("harga");
@@ -99,7 +99,7 @@ class Makanan extends ResourceController
                 
                     return $this->respond($response, 404);
                 }else {
-                    $modelUsr->insert([
+                    $modelMakanan->insert([
                         'id' => $id,
                         'nama_makanan' => $nama_makanan,
                         'harga' => $harga,
@@ -132,7 +132,7 @@ class Makanan extends ResourceController
      */
     public function update($id = null)
     {
-        $model = new ModelMakanan();
+        $model = new Modelmakanan();
         $data = [
             'nama_makanan' => $this->request->getVar("nama_makanan"),
              'harga' => $this->request->getVar("harga"),
