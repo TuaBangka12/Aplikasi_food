@@ -182,41 +182,32 @@ class User extends ResourceController
 
    
 
-    public function login(){
-        {
-            $session = session();
+    public function login($cari=null){
             $modelUsr = new ModelUser();
-            $user = $this->request->getVar('user');
-            $password = $this->request->getVar('password');
-            $email = $this->request->getVar('email');
-            $tanggal_lahir = $this->request->getVar('tanggal lahir');
-            $nomor_hp = $this->request->getVar('nomor_hp');
-            $cari = $model->where('user', $user)->first();
+            $user = $this->request->getPost('user');
+            $password = $this->request->getPost('password');
+            $cari = $modelUsr->where('user', $user)->first();
             if($cari){
-                $pass = $data['password'];
-                $verify_pass = password_verify($password, $pass);
+                $pass = $cari['password'];
+                $verify_pass = $password == $pass;
                 if($verify_pass){
-                    $ses_data = [
-                        'id'       => $cari['id'],
-                        'user'     => $cari['user'],
-                        'email'    => $cari['email'],
-                        'tanggal_lahir' => $cari['tanggal_lahir'],
-                        'nomor_hp' => $cari['nomor_hp'],
-                        'logged_in'     => TRUE
+                    $response = [
+                        'status' => 200,
+                        'error' => false,
+                        'massage' => 'Login telah berhasil',
+                        'data'     => $cari
                     ];
-                    $session->set($ses_data);
-                    return redirect()->to('/dashboard');
+                    return $this->respond($response, 200);
                 }else{
-                    $session->setFlashdata('msg', 'Wrong Password');
-                    return redirect()->to('/login');
+                   
+                    return $this->failNotFound('Password anda salah');
                 }
             }else{
-                $session->setFlashdata('msg', 'Email not Found');
-                return redirect()->to('/login');
+                return $this->failNotFound('Username tidak ditemukan');
             }
         }
 
-    }
+    
     public function logout()
     {
         $session = session();
@@ -231,9 +222,9 @@ class User extends ResourceController
             //set rules validation form
             $rules = [
                 'user'          => 'required|min_length[3]|max_length[20]',
-                'password'      => 'required|min_length[6]|max_length[200]',
+                'password'      => 'required',
                 'email'         => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.user_email]',
-                'tanggal_lahir' => 'required|date',
+                'tanggal_lahir' => 'required',
                 'nomor_hp'      => 'required|max_length[13]',
                 'confpassword'  => 'matches[password]'
             ];
@@ -247,8 +238,7 @@ class User extends ResourceController
                     'nomor_hp' => $this->request->getVar('nomor_hp'),
                     'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT)
                 ];
-                $model->save($data);
-                return redirect()->to('/login');
+                $model->register($data);
             }else{
                 $data['validation'] = $this->validator;
                 echo view('register', $data);
