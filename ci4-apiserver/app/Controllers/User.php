@@ -82,7 +82,7 @@ class User extends ResourceController
         $password = $this->request->getPost("password");
         $email = $this->request->getPost("email");
         $tanggal_lahir= $this->request->getPost("tanggal_lahir");
-        $nomor_hp = $this->request->getPost("nomor_hp");
+        $nomorHP = $this->request->getPost("nomorHP");
 
         $validation = \Config\Services::validation();
 
@@ -111,7 +111,7 @@ class User extends ResourceController
                         'password' => $password,
                         'email' => $email,
                         'tanggal_lahir' => $tanggal_lahir,
-                        'nomor_hp' => $nomor_hp,
+                        'nomorHP' => $nomorHP,
                     ]);
 
                     $response = [
@@ -144,7 +144,7 @@ class User extends ResourceController
             'password' => $this->request->getVar("password"),
             'email' => $this->request->getVar("email"),
             'tanggal_lahir' => $this->request->getVar("tanggal_lahir"),
-            'nomor_hp' => $this->request->getVar("nomor_hp"),
+            'nomorHP' => $this->request->getVar("nomorHP"),
         ];
         $data = $this->request->getRawInput();
         $model->update($id, $data);
@@ -225,7 +225,7 @@ class User extends ResourceController
                 'password'      => 'required',
                 'email'         => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.user_email]',
                 'tanggal_lahir' => 'required',
-                'nomor_hp'      => 'required|max_length[13]',
+                'nomorHP'      => 'required|max_length[13]',
                 'confpassword'  => 'matches[password]'
             ];
              
@@ -235,7 +235,7 @@ class User extends ResourceController
                     'username'     => $this->request->getVar('user'),
                     'user_email'    => $this->request->getVar('email'),
                     'tanggal_lahir' => $this->request->getVar('tanggal lahir'),
-                    'nomor_hp' => $this->request->getVar('nomor_hp'),
+                    'nomorHP' => $this->request->getVar('nomorHP'),
                     'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT)
                 ];
                 $model->register($data);

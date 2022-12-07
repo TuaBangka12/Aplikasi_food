@@ -8,7 +8,8 @@ class Modeluser extends Model
 {
    protected $table         = 'user';
    protected $primaryKey    = 'id';
+   protected $useAutoIncrement = true;
    protected $allowedFields =[
-        'id','user','password','email','tanggal_lahir','nomorHP'
+        'user','password','email','tanggal_lahir','nomorHP'
    ];
 }
