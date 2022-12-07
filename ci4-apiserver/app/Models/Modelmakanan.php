@@ -8,7 +8,8 @@ class Modelmakanan extends Model
 {
     protected $table         = 'makanan';
     protected $primaryKey    = 'id';
+    protected $useAutoIncrement = 'true';
     protected $allowedFields =[
-         'id','nama_makanan','harga'
+         'nama_makanan','harga'
     ];
 }

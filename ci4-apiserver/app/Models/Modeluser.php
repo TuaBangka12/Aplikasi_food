@@ -9,6 +9,6 @@ class Modeluser extends Model
    protected $table         = 'user';
    protected $primaryKey    = 'id';
    protected $allowedFields =[
-        'id','user','password','email','tanggal_lahir','nomor_hp'
+        'id','user','password','email','tanggal_lahir','nomorHP'
    ];
 }

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Models\Modelmakanan;
 
 class Makanan extends ResourceController
 {
@@ -30,10 +31,10 @@ class Makanan extends ResourceController
      *
      * @return mixed
      */
-    public function show($cari = null)
+    public function show($id = null)
     {
-        $modelMakanan = new Modeluser();
-        $data = $modelMakanan->orLike('id', $cari) ->orLike('makanan', $cari)->get()->getResult();
+        $modelMakanan = new Modelmakanan();
+        $data = $modelMakanan -> orLike('id', $id) ->orLike('nama_makanan', $id)->get()->getResult();
         if(count($data) > 1) {
                 $response = [
                     'status' => 200,
@@ -47,13 +48,13 @@ class Makanan extends ResourceController
                     $response = [
                         'status' => 200,
                         'error' => "false",
-                        'message' => '',
+                        'message' => '', 
                         'totaldata' => count($data),
                         'data' => $data,
          ];
             return $this->respond($response, 200);
         }else {
-            return $this->failNotFound('maaf data ' . $cari .' tidak ditemukan');
+            return $this->failNotFound('maaf data ' . $id .' tidak ditemukan');
         }
     }
 
@@ -74,33 +75,25 @@ class Makanan extends ResourceController
      */
     public function create()
     {
-        $modelMakanan = new ModelMakanan();
-        $id = $this->request->getPost("id");
+        $modelMakanan = new Modelmakanan();
         $nama_makanan = $this->request->getPost("nama_makanan");
         $harga = $this->request->getPost("harga");
         $validation = \Config\Services::validation();
 
         $valid = $this->validate([
-            'id' => [
-                'rules' => 'is_unique[makanan.id]',
-                'label' => 'Id Makanan',
-                'errors' => [
-                    'is_unique' => "{field} sudah ada"
-                    ]
-
-            ]
+            'nama_makanan' => 'required',
+            'harga' => 'required',
                 ]);
                 if(!$valid){
                     $response = [
                     'status' => 404,
                     'error' => true,
-                    'message' => $validation->getError("id"),
+                    'message' => $validation->getError(),
                     ];
                 
-                    return $this->respond($response, 404);
+                return $this->respond($response, 404);
                 }else {
-                    $modelUsr->insert([
-                        'id' => $id,
+                    $modelMakanan->insert([
                         'nama_makanan' => $nama_makanan,
                         'harga' => $harga,
                     ]);
@@ -132,14 +125,13 @@ class Makanan extends ResourceController
      */
     public function update($id = null)
     {
-        $model = new ModelMakanan();
+        $model = new Modelmakanan();
         $data = [
             'nama_makanan' => $this->request->getVar("nama_makanan"),
              'harga' => $this->request->getVar("harga"),
         ];
         $data = $this->request->getRawInput();
         $model->update($id, $data);
-
         $response = [
             'status' => 200,
             'error' => null,
@@ -155,6 +147,19 @@ class Makanan extends ResourceController
      */
     public function delete($id = null)
     {
-        //
+        $modelMakanan = new Modelmakanan();
+
+        $cekData = $modelMakanan->find($id);
+        if($cekData) {
+            $modelMakanan->delete($id);
+            $response = [
+                'status' => 200,
+                'error' => null,
+                'message' => "Selamat data makanan id $id sudah berhasil dihapus"
+            ];
+            return $this->respondDeleted($response);
+        }else {
+        return $this->failNotFound('Data tidak ditemukan kembali');
+        }
     }
 }
