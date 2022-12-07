@@ -135,7 +135,7 @@ class Makanan extends ResourceController
         $response = [
             'status' => 200,
             'error' => null,
-            'message' => "Data Anda dengan nama makanan $nama_makanan berhasil diupdate"
+            'message' => "Data Anda dengan nama makanan $id berhasil diupdate"
             ];
             return $this->respond($response);
     }
